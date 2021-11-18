@@ -3,6 +3,7 @@ import pandas as pd
 import tensorflow as tf
 import csv
 
+from src.Upload.gs import update_dataframe
 from src.Predict import NN_Runner, XGBoost_Runner
 from src.Utils.Dictionaries import team_index_current, team_initials
 from src.Utils.tools import get_json_data, to_data_frame
@@ -67,20 +68,40 @@ def main():
     if args.nn:
         print("------------Neural Network Model Predictions-----------")
         data = tf.keras.utils.normalize(data, axis=1)
-        NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds) # games => [home,away]
+        result_d, result_e = NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds) # games => [home,away]
         print("-------------------------------------------------------")
+        result_df = pd.DataFrame(result_d)
+        result_e = pd.DataFrame(result_e)
+        result = pd.concat([result_df, result_e], axis=1)
+        update_dataframe(result)
+        
     if args.xgb:
         print("---------------XGBoost Model Predictions---------------")
-        XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
+        result_d, result_e = XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
         print("-------------------------------------------------------")
+        result_df = pd.DataFrame(result_d)
+        result_e = pd.DataFrame(result_e)
+        result = pd.concat([result_df, result_e], axis=1)
+        update_dataframe(result)
+        
     if args.A:
         print("---------------XGBoost Model Predictions---------------")
-        XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
+        result_xd, result_xe = XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
+        result_xdf = pd.DataFrame(result_xd)
+        result_xedf = pd.DataFrame(result_xe)
+        result_xgb = pd.concat([result_xdf, result_xedf], axis=1)
         print("-------------------------------------------------------")
         data = tf.keras.utils.normalize(data, axis=1)
         print("------------Neural Network Model Predictions-----------")
-        NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
+        result_nd, result_ne = NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
+        result_ndf = pd.DataFrame(result_nd)
+        result_nedf = pd.DataFrame(result_ne)
+        result_nn = pd.concat([result_ndf, result_nedf], axis=1)
         print("-------------------------------------------------------")
+        
+        result = pd.concat([result_xgb, result_nn], axis=0)
+        update_dataframe(result)
+        
 
 
 if __name__ == "__main__":
