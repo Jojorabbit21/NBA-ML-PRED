@@ -65,49 +65,50 @@ def main():
     data = get_json_data(data_url)
     df = to_data_frame(data)
     games, data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(df)
-    if args.nn:
-        print("------------Neural Network Model Predictions-----------")
-        data = tf.keras.utils.normalize(data, axis=1)
-        result_d, result_e = NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds) # games => [home,away]
-        print("-------------------------------------------------------")
-        result_df = pd.DataFrame(result_d)
-        result_e = pd.DataFrame(result_e)
-        result = pd.concat([result_df, result_e], axis=1)
-        update_dataframe(result)
+    
+    # if args.nn:
+    #     print("------------Neural Network Model Predictions-----------")
+    #     data = tf.keras.utils.normalize(data, axis=1)
+    #     result_d, result_e = NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds) # games => [home,away]
+    #     print("-------------------------------------------------------")
+    #     result_df = pd.DataFrame(result_d)
+    #     result_e = pd.DataFrame(result_e)
+    #     result = pd.concat([result_df, result_e], axis=1)
+    #     update_dataframe(result)
         
-    if args.xgb:
-        print("---------------XGBoost Model Predictions---------------")
-        result_d, result_e = XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
-        print("-------------------------------------------------------")
-        result_df = pd.DataFrame(result_d)
-        result_e = pd.DataFrame(result_e)
-        result = pd.concat([result_df, result_e], axis=1)
-        update_dataframe(result)
+    # if args.xgb:
+    #     print("---------------XGBoost Model Predictions---------------")
+    #     result_d, result_e = XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
+    #     print("-------------------------------------------------------")
+    #     result_df = pd.DataFrame(result_d)
+    #     result_e = pd.DataFrame(result_e)
+    #     result = pd.concat([result_df, result_e], axis=1)
+    #     update_dataframe(result)
         
-    if args.A:
-        print("---------------XGBoost Model Predictions---------------")
-        result_xd, result_xe = XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
-        result_xdf = pd.DataFrame(result_xd)
-        result_xedf = pd.DataFrame(result_xe)
-        result_xgb = pd.concat([result_xdf, result_xedf], axis=1)
-        print("-------------------------------------------------------")
-        data = tf.keras.utils.normalize(data, axis=1)
-        print("------------Neural Network Model Predictions-----------")
-        result_nd, result_ne = NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
-        result_ndf = pd.DataFrame(result_nd)
-        result_nedf = pd.DataFrame(result_ne)
-        result_nn = pd.concat([result_ndf, result_nedf], axis=1)
-        print("-------------------------------------------------------")
-        
-        result = pd.concat([result_xgb, result_nn], axis=0)
-        update_dataframe(result)
+    # if args.A:
+    print("---------------XGBoost Model Predictions---------------")
+    result_xd, result_xe = XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
+    result_xdf = pd.DataFrame(result_xd)
+    result_xedf = pd.DataFrame(result_xe)
+    result_xgb = pd.concat([result_xdf, result_xedf], axis=1)
+    print("-------------------------------------------------------")
+    data = tf.keras.utils.normalize(data, axis=1)
+    print("------------Neural Network Model Predictions-----------")
+    result_nd, result_ne = NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds)
+    result_ndf = pd.DataFrame(result_nd)
+    result_nedf = pd.DataFrame(result_ne)
+    result_nn = pd.concat([result_ndf, result_nedf], axis=1)
+    print("-------------------------------------------------------")
+    
+    result = pd.concat([result_xgb, result_nn], axis=0)
+    update_dataframe(result)
         
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Model to Run')
-    parser.add_argument('-xgb', action='store_true', help='Run with XGBoost Model')
-    parser.add_argument('-nn', action='store_true', help='Run with Neural Network Model')
-    parser.add_argument('-A', action='store_true', help='Run all Models')
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description='Model to Run')
+    # parser.add_argument('-xgb', action='store_true', help='Run with XGBoost Model')
+    # parser.add_argument('-nn', action='store_true', help='Run with Neural Network Model')
+    # parser.add_argument('-A', action='store_true', help='Run all Models')
+    # args = parser.parse_args()
     main()

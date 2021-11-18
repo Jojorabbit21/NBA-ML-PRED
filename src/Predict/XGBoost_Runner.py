@@ -49,7 +49,7 @@ def xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team
         un_confidence = ou_predictions_array[count]
         
         now = datetime.now()
-        tz = now.strftime("%Y-%m-%d %H:%M")
+        tz = now.strftime("%Y/%m/%d")
         
         result_line.append(tz)
         result_line.append("Xgb")

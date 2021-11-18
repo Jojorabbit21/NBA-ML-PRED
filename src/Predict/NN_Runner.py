@@ -44,7 +44,7 @@ def nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_
         un_confidence = ou_predictions_array[count]
         
         now = datetime.now()
-        tz = now.strftime("%Y-%m-%d %H:%M")
+        tz = now.strftime("%Y/%m/%d")
         
         result_line.append(tz)
         result_line.append("NN")
@@ -114,6 +114,7 @@ def nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_
 
         ev_home = float(Expected_Value.expected_value(ml_predictions_array[count][0][1], int(home_team_odds[count])))
         ev_away = float(Expected_Value.expected_value(ml_predictions_array[count][0][0], int(away_team_odds[count])))
+
         if ev_home > 0:
             print(home_team + ' EV: ' + Fore.GREEN + str(ev_home) + Style.RESET_ALL)
         else:
