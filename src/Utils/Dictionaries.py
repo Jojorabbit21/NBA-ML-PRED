@@ -33,6 +33,39 @@ team_codes = {
     'Washington': 'Washington Wizards',
 }
 
+team_rotowire = {
+    'Hawks': 'ATL',
+    'Nets': 'BKN',
+    'Celtics': 'BOS',
+    'Hornets': 'CHA',
+    'Bulls': 'CHI',
+    'Cavaliers': 'CLE',
+    'Mavericks': 'DAL',
+    'Nuggets': 'DEN',
+    'Pistons': 'DET',
+    'Warriors': 'GS',
+    'Rockets': 'HOU',
+    'Pacers': 'IND',
+    'Clippers': 'LAC',
+    'Lakers': 'LAL',
+    'Grizzlies': 'MEM',
+    'Heat': 'MIA',
+    'Bucks': 'MIL',
+    'Timberwolves': 'MIN',
+    'Pelicans': 'NO',
+    'Knicks': 'NY',
+    'Thunder': 'OKC',
+    'Magic': 'ORL',
+    '76ers': 'PHI',
+    'Suns': 'PHO',
+    'Trail Blazers': 'POR',
+    'Kings': 'SAC',
+    'Spurs': 'SA',
+    'Raptors': 'TOR',
+    'Jazz': 'UTA',
+    'Wizards': 'WAS'
+}
+
 team_initials = {
     'ATL': 'Atlanta Hawks',
     'NJN': 'New Jersey Nets',

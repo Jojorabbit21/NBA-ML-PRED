@@ -3,6 +3,8 @@ import pandas as pd
 import tensorflow as tf
 import csv
 
+from datetime import datetime
+from src.Scraper.getodds import scrape_odds
 from src.Upload.gs import update_dataframe
 from src.Predict import NN_Runner, XGBoost_Runner
 from src.Utils.Dictionaries import team_index_current, team_initials
@@ -19,7 +21,7 @@ data_url = 'https://stats.nba.com/stats/leaguedashteamstats?' \
            'StarterBench=&TeamID=0&TwoWay=0&VsConference=&VsDivision='
 
 
-def createTodaysGames(df):
+def createTodaysGames(df, date):
     
     # Visitor,Home,VisitorML,HomeML,UO
     input_list = []
@@ -28,8 +30,8 @@ def createTodaysGames(df):
     todays_games_uo = []
     home_team_odds = []
     away_team_odds = []
-        
-    file = open("./Schedules/schedules.csv", "r")
+    
+    file = open("./Schedules/" + date + ".csv", "r")
     r = csv.reader(file)
     for lines in r:
         input_list.append(lines)
@@ -61,10 +63,12 @@ def createTodaysGames(df):
 
 
 def main():
-    # data = get_todays_games_json(todays_games_url)
+    
     data = get_json_data(data_url)
     df = to_data_frame(data)
-    games, data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(df)
+    date = datetime.now().strftime('%Y-%m-%d')
+    scrape_odds(date)
+    games, data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(df, date)
     
     # if args.nn:
     #     print("------------Neural Network Model Predictions-----------")
