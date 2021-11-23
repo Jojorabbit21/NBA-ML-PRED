@@ -3,7 +3,7 @@ import pandas as pd
 import tensorflow as tf
 import csv
 
-from datetime import datetime
+from datetime import date, datetime, timedelta, timezone
 from src.Scraper.getodds import scrape_odds
 from src.Upload.gs import update_dataframe
 from src.Predict import NN_Runner, XGBoost_Runner
@@ -66,9 +66,12 @@ def main():
     
     data = get_json_data(data_url)
     df = to_data_frame(data)
-    date = datetime.now().strftime('%Y-%m-%d')
-    scrape_odds(date)
-    games, data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(df, date)
+    
+    td = datetime.now()
+    est = td - timedelta(hours=14)
+    fd = est.strftime('%Y-%m-%d')
+    scrape_odds(fd)
+    games, data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(df, fd)
     
     # if args.nn:
     #     print("------------Neural Network Model Predictions-----------")
