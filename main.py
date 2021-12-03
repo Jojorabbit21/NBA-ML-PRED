@@ -21,33 +21,23 @@ data_url = 'https://stats.nba.com/stats/leaguedashteamstats?' \
            'StarterBench=&TeamID=0&TwoWay=0&VsConference=&VsDivision='
 
 
-def createTodaysGames(df, date):
+def createTodaysGames(df, odds, date):
     
     # Visitor,Home,VisitorML,HomeML,UO
-    input_list = []
     games = []
     match_data = []
     todays_games_uo = []
     home_team_odds = []
     away_team_odds = []
     
-    file = open("./Schedules/" + date + ".csv", "r")
-    r = csv.reader(file)
-    for lines in r:
-        input_list.append(lines)
-    file.close()
-    
-    for game in input_list:
-        home_team = team_initials[game[1]]
-        away_team = team_initials[game[0]]
-        # print([home_team, away_team])
-        home_team_odds.append(game[3])
-        away_team_odds.append(game[2])
-        todays_games_uo.append(game[4])
-        # print([game[3],game[2],game[4]])
+    for game in range(len(odds)):
+        home_team = team_initials[odds.loc[game,'Home']]
+        away_team = team_initials[odds.loc[game,'Visit']]
+        home_team_odds.append(odds.loc[game,'H_Odd'])
+        away_team_odds.append(odds.loc[game,'V_Odd'])
+        todays_games_uo.append(odds.loc[game,'OU'])
         home_team_series = df.iloc[team_index_current.get(home_team)]
         away_team_series = df.iloc[team_index_current.get(away_team)]
-        # print([home_team_series, away_team_series])
         stats = home_team_series.append(away_team_series)
         match_data.append(stats)
         games.append([home_team, away_team])     
@@ -70,8 +60,8 @@ def main():
     td = datetime.now()
     est = td - timedelta(hours=14)
     fd = est.strftime('%Y-%m-%d')
-    scrape_odds(fd)
-    games, data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(df, fd)
+    odds = scrape_odds(fd)
+    games, data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(df, odds, fd)
     
     # if args.nn:
     #     print("------------Neural Network Model Predictions-----------")
