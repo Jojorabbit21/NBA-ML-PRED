@@ -5,8 +5,10 @@ import csv
 
 from datetime import date, datetime, timedelta, timezone
 from src.Scraper.getodds import scrape_odds
+from src.TrainModels import Train_Model_UO
 from src.Upload.gs import update_dataframe
 from src.Predict import NN_Runner, XGBoost_Runner
+from src.TrainModels import *
 from src.Utils.Dictionaries import team_index_current, team_initials
 from src.Utils.tools import get_json_data, to_data_frame
 
@@ -62,6 +64,7 @@ def main():
     fd = est.strftime('%Y-%m-%d')
     odds = scrape_odds(fd)
     games, data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(df, odds, fd)
+    
     
     # if args.nn:
     #     print("------------Neural Network Model Predictions-----------")
