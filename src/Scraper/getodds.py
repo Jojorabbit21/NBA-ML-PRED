@@ -80,8 +80,9 @@ def scrape_odds(date):
 
     return df
 
-if __name__ == "__main__":
-    scrape_odds()
-
-
+def scrape_odds_history(season:str='2020-21'):
+    path = './Schedules/nba_{}.csv'.format(season)
+    df = pd.read_csv(path,header=0)
+    df = df.loc[:,['Visit','Home','V_Odd','H_Odd','OU']]
+    return df
     

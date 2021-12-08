@@ -309,3 +309,4 @@ team_index_current = {
 }
 
 # print(team_index_current.get(team_initials['WSH']))
+
