@@ -19,10 +19,14 @@ for x in tqdm(range(100)):
     test = xgb.DMatrix(x_test)
 
     param = {
+        'booster': 'gbtree',
         'max_depth': 6,
-        'eta': 0.05,
+        'min_child_weight': 3,
+        'gamma': 0.4,
+        'eta': 0.1,
         'objective': 'multi:softprob',
-        'num_class': 3
+        'num_class': 3,
+        'eval_metric': 'logloss'
     }
     epochs = 300
 
