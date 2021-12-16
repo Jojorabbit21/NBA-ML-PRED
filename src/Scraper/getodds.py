@@ -22,62 +22,66 @@ def scrape_odds(date):
     options.add_argument('disable-gpu')
     options.add_argument('headless')
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    #options.add_argument(user_agent)
 
     driver = webdriver.Chrome(options=options, executable_path=r'./src/Scraper/chromedriver.exe')
     driver.get(url)
     driver.implicitly_wait(2)
     sleep(2)
-    teams = driver.find_elements_by_class_name("hide-until-md")
-    odds = driver.find_elements_by_class_name("odds-table-odds-link__val")
-    
+
     visit = []
     home = []
     visit_odds = []
     home_odds = []
     ou = []
-
-    for a in range(4):
-        for b in range(len(teams)):
-            target = a*len(teams)+b
-            if a == 0:
-                if b%2==0:
-                    try:
-                        visit.append(team_rotowire[teams[target].text])
-                    except:
-                        visit.append('None')
-                    try:
-                        visit_odds.append(odds[target].text)
-                    except:
-                        visit_odds.append(0)
-                else:
-                    try:
-                        home.append(team_rotowire[teams[target].text])
-                    except:
-                        home.append('None')
-                    try:
-                        home_odds.append(odds[target].text)
-                    except:
-                        home_odds.append(0)
-            elif a == 1:
-                pass
-            elif a == 2:
-                if b%2==0:
-                    try:
-                        t = str(odds[target].text)
-                        ou.append(t[2:])
-                    except:
-                        ou.append(0)
     
+    # Team Name Selector
+    # div.webix_ss_body > div.webix_ss_left > div > div > div:nth-child(1) > a > span.hide-until-md
+    # Moneyline Odds Selector
+    # div.webix_ss_body > div.webix_ss_center > div > div:nth-child(2)
+    
+    teams = driver.find_elements_by_css_selector('div.webix_ss_body > div.webix_ss_left > div > div > div > a > span.hide-until-md')
+    for i in range(len(teams)):
+        if i%2==0:
+            visit.append(team_rotowire[teams[i].text])
+        else:
+            home.append(team_rotowire[teams[i].text])
+        
+    moneyline = driver.find_elements_by_css_selector('div.webix_ss_body > div.webix_ss_center > div > div:nth-child(2) > div')
+    for i in range(len(moneyline)):
+        if i%2==0:
+            if moneyline[i].text != '-':
+                visit_odds.append(moneyline[i].text)
+            else:
+                visit_odds.append(0)
+        else:
+            if moneyline[i].text != '-':
+                home_odds.append(moneyline[i].text)
+            else:
+                home_odds.append(0)
+    
+    ouodds = driver.find_elements_by_css_selector('div.webix_ss_body > div.webix_ss_center > div > div:nth-child(6) > div')
+    for i in range(len(ouodds)):
+        if i%2 == 0:
+            if ouodds[i].text != '-':
+                val = str(ouodds[i].text)
+                ou.append(val[2:])
+            else:
+                ou.append(0)
+           
     driver.close()
-            
+   
     df = pd.DataFrame()
     df["Visit"] = visit
     df['Home'] = home
     df['V_Odd'] = visit_odds
     df['H_Odd'] = home_odds
     df['OU'] = ou
-
+    
+    condition = (df.V_Odd == 0) | (df.H_Odd == 0) | (df.OU == 0)
+    debris = df[condition].index
+    df.drop(debris, inplace=True) 
+    df.reset_index(drop=True, inplace=True)
+    print(df)
     return df
 
 def scrape_odds_history(season:str='2020-21'):
