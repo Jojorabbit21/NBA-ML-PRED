@@ -63,8 +63,8 @@ def main():
     fd = est.strftime('%Y-%m-%d')
     target_season = '2021-22'
     
-    odds = scrape_odds(fd)
-    # odds = scrape_odds_history(target_season)
+    # odds = scrape_odds(fd)
+    odds = scrape_odds_history(target_season)
     
     games, data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(df, odds, fd)
     print("---------------XGBoost Model Predictions---------------")
